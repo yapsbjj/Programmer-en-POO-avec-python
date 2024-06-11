@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Listes des membres</title>
+</head>
+<body>
+ <h1>Liste des membres</h1>
+    <ul>
+        {% for membre in membres %}
+        <li>{{ membre.name }}{% if membre.bloque %} (bloqué){% endif %}</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'index' %}">Retour à l'accueil</a>
+</body>
+</html>
