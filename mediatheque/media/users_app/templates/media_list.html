@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Liste des Médias</title>
+</head>
+<body>
+    <h1>Liste des Médias</h1>
+    <ul>
+        {% for media in medias %}
+            <li>{{ media.title }} - {{ media.author }} ({{ media.publication_date }})</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

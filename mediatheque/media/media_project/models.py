@@ -27,4 +27,3 @@ class Emprunteur(models.Model):
     bloque = models.BooleanField(default=False)
 
 
-

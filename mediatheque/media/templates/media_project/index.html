@@ -6,9 +6,15 @@
 </head>
 <body>
     <h1>Bienvenue à la médiathèque</h1>
-    <a href="{% url 'liste_membres' %}">Liste des membres</a><br>
-    <a href="{% url 'liste_medias' %}">Liste des médias</a><br>
-    <a href="{% url 'creer_membre' %}">Créer un membre</a><br>
+    <ul>
+        <li><a href="{% url 'liste_membres' %}">Liste des membres</a></li>
+        <li><a href="{% url 'liste_medias' %}">Liste des médias</a></li>
+        <li><a href="{% url 'add_livre' %}">Ajouter un Livre</a></li>
+        <li><a href="{% url 'add_dvd' %}">Ajouter un DVD</a></li>
+        <li><a href="{% url 'add_cd' %}">Ajouter un CD</a></li>
+        <li><a href="{% url 'add_jeu_de_plateau' %}">Ajouter un Jeu de Plateau</a></li>
+        <li><a href="{% url 'creer_membre' %}">Créer un membre</a></li>
+    </ul>
 </body>
 </html>
 </html>
