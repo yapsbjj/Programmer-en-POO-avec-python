@@ -1,5 +1,6 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.models import User
 from .models import Livre, DVD, CD, JeuDePlateau, Emprunteur
 
 class LivreForm(forms.ModelForm):
@@ -23,10 +24,12 @@ class JeuDePlateauForm(forms.ModelForm):
         fields = ['name', 'createur']
 
 class EmprunteurForm(forms.ModelForm):
+    # Ajout d'un champ pour le mot de passe
+    password = forms.CharField(widget=forms.PasswordInput(), label="Mot de passe")
+
     class Meta:
         model = Emprunteur
         fields = ['name', 'bloque']
-
 
 class ConnexionForm(AuthenticationForm):
     pass

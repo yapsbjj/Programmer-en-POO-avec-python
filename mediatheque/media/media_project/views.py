@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
 from .models import Livre, DVD, CD, JeuDePlateau, Emprunteur
 from .forms import EmprunteurForm, LivreForm, DVDForm, CDForm, JeuDePlateauForm
 
@@ -17,12 +18,44 @@ def liste_membres(request):
 def creer_membre(request):
     if request.method == 'POST':
         form = EmprunteurForm(request.POST)
-        if form.is_valid():
-            form.save()
+        password = request.POST.get('password')  # Récupérer le mot de passe du formulaire
+        if form.is_valid() and password:  # Vérifier si le formulaire est valide et que le mot de passe est présent
+            membre = form.save(commit=False)  # Enregistrer l'emprunteur sans le sauvegarder tout de suite
+            # Créer l'utilisateur avec le mot de passe
+            user = User.objects.create_user(
+                username=membre.nom,  # Utiliser le nom ou un autre champ comme nom d'utilisateur
+                password=password
+            )
+            membre.user = user  # Lier l'emprunteur à l'utilisateur
+            membre.save()  # Enregistrer l'emprunteur
             return redirect('liste_membres')
     else:
         form = EmprunteurForm()
     return render(request, 'media_project/creer_membre.html', {'form': form})
+
+# Mettre à jour un membre
+def update_membre(request, membre_id):
+    membre = get_object_or_404(Emprunteur, id=membre_id)
+    
+    if request.method == 'POST':
+        form = EmprunteurForm(request.POST, instance=membre)
+        if form.is_valid():
+            form.save()
+            return redirect('liste_membres')
+    else:
+        form = EmprunteurForm(instance=membre)
+    
+    return render(request, 'media_project/update_membre.html', {'form': form, 'membre': membre})
+
+# Supprimer un membre
+def delete_membre(request, membre_id):
+    membre = get_object_or_404(Emprunteur, id=membre_id)
+    
+    if request.method == 'POST':
+        membre.delete()
+        return redirect('liste_membres')
+    
+    return render(request, 'media_project/delete_membre.html', {'membre': membre})
 
 # Liste des médias
 def liste_medias(request):
@@ -44,10 +77,10 @@ def is_borrower(user):
 # Vue de connexion
 def connexion(request):
     if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)  # Utilisation du formulaire d'authentification de Django
+        form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
-            login(request, user)  # Connecter l'utilisateur
+            login(request, user)
             return redirect('page_accueil')  # Redirection après connexion réussie
         else:
             form.add_error(None, "Nom d'utilisateur ou mot de passe incorrect")
